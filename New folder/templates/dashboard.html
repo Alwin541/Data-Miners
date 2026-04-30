@@ -1,0 +1,114 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Counselor Dashboard</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body class="dashboard-page">
+  <div class="dashboard-shell">
+    <aside class="dashboard-sidebar">
+      <div class="brand-block">
+        <div class="brand-mark">SA</div>
+        <div>
+          <strong>Smart Student Analyzer</strong>
+          <span>Screen Time vs Academic Performance</span>
+        </div>
+      </div>
+      <nav class="dashboard-nav">
+        <a href="{{ url_for('index') }}">New Input</a>
+        <a class="active" href="{{ url_for('dashboard') }}">Dashboard</a>
+        <a href="{{ url_for('parent_report') }}">Parent Report</a>
+        <a href="{{ url_for('subject_analysis') }}">Subject Analysis</a>
+      </nav>
+      <div class="sidebar-note">
+        <strong>Balanced Today<br>Better Tomorrow</strong>
+        <p>Small routine changes can improve study focus and screen habits.</p>
+      </div>
+    </aside>
+
+    <main class="dashboard-main">
+      <header class="dashboard-header">
+        <div>
+          <p class="eyebrow">Counselor View</p>
+          <h1>Analytical Risk Dashboard</h1>
+        </div>
+        <div class="dashboard-user">
+          <span>Student Report</span>
+          <strong>{{ prediction.addiction }} Risk</strong>
+        </div>
+      </header>
+
+      <section class="dashboard-metrics">
+        <article class="dashboard-card metric-card">
+          <span>English</span>
+          {% set english_effect = analysis.subject_effects.get('english') %}
+          {% if english_effect %}
+            <strong>{{ english_effect.affected_by[0].dashboard_title }}</strong>
+            <p>{{ english_effect.affected_by[0].dashboard_message }}</p>
+          {% endif %}
+        </article>
+        <article class="dashboard-card metric-card">
+          <span>Maths</span>
+          {% set maths_effect = analysis.subject_effects.get('maths') %}
+          {% if maths_effect %}
+            <strong>{{ maths_effect.affected_by[0].dashboard_title }}</strong>
+            <p>{{ maths_effect.affected_by[0].dashboard_message }}</p>
+          {% endif %}
+        </article>
+        <article class="dashboard-card metric-card">
+          <span>Science</span>
+          {% set science_effect = analysis.subject_effects.get('science') %}
+          {% if science_effect %}
+            <strong>{{ science_effect.affected_by[0].dashboard_title }}</strong>
+            <p>{{ science_effect.affected_by[0].dashboard_message }}</p>
+          {% endif %}
+        </article>
+        <article class="dashboard-card metric-card risk-card">
+          <span>Addiction Level</span>
+          <strong style="color: {{ graphs.risk_color }}">{{ prediction.addiction }}</strong>
+          <p>Risk classification from the submitted habits.</p>
+        </article>
+      </section>
+
+      <section class="dashboard-grid">
+        <article class="dashboard-card chart-card wide">
+          <h2>Study Performance vs Screen Time</h2>
+          <img src="{{ url_for('static', filename=graphs.study_performance_screen_time) }}" alt="Study performance versus screen time chart">
+        </article>
+        <article class="dashboard-card chart-card">
+          <h2>Screen Usage</h2>
+          <img src="{{ url_for('static', filename=graphs.screen_usage_pie) }}" alt="Screen usage pie chart">
+        </article>
+        <article class="dashboard-card chart-card">
+          <h2>Risk Indicator</h2>
+          <img src="{{ url_for('static', filename=graphs.risk_indicator) }}" alt="Risk indicator">
+        </article>
+        <article class="dashboard-card chart-card wide">
+          <h2>Feature Impact</h2>
+          <img src="{{ url_for('static', filename=graphs.feature_impact_bar) }}" alt="Feature impact bar chart">
+        </article>
+      </section>
+
+      <section class="dashboard-lower">
+        <article class="dashboard-card insight-card">
+          <h2>AI Counselor Insight</h2>
+          <p>{{ analysis.counselor_insight }}</p>
+          <p class="status">{{ analysis.ai_source }}</p>
+          <p class="status">{{ prediction.model_status }}</p>
+        </article>
+
+        <article class="dashboard-card input-card">
+          <h2>Input Used</h2>
+          <dl class="facts compact-facts">
+            {% for key, value in student_input.items() %}
+              <div><dt>{{ key }}</dt><dd>{{ value }}</dd></div>
+            {% endfor %}
+          </dl>
+        </article>
+      </section>
+    </main>
+  </div>
+</body>
+</html>

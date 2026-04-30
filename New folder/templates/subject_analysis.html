@@ -1,0 +1,85 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Subject Analysis</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body class="dashboard-page">
+  <div class="dashboard-shell">
+    <aside class="dashboard-sidebar">
+      <div class="brand-block">
+        <div class="brand-mark">SA</div>
+        <div>
+          <strong>Smart Student Analyzer</strong>
+          <span>Screen Time vs Academic Performance</span>
+        </div>
+      </div>
+      <nav class="dashboard-nav">
+        <a href="{{ url_for('index') }}">New Input</a>
+        <a href="{{ url_for('dashboard') }}">Dashboard</a>
+        <a href="{{ url_for('parent_report') }}">Parent Report</a>
+        <a class="active" href="{{ url_for('subject_analysis') }}">Subject Analysis</a>
+      </nav>
+      <div class="sidebar-note">
+        <strong>Subject Clarity<br>Targeted Support</strong>
+        <p>Review each subject through its strongest habit signals and suggested fixes.</p>
+      </div>
+    </aside>
+
+    <main class="dashboard-main">
+      <header class="dashboard-header">
+        <div>
+          <p class="eyebrow">Subject-Wise Screen Impact</p>
+          <h1>Per Subject Factor Analysis</h1>
+          <p class="status">These explanations combine the submitted values, predicted marks, and subject-wise impact rules.</p>
+        </div>
+        <div class="dashboard-user">
+          <span>Predicted Risk</span>
+          <strong style="color: {{ graphs.risk_color }}">{{ prediction.addiction }} Risk</strong>
+        </div>
+      </header>
+
+      <section class="subject-grid subject-analysis-grid">
+        {% for subject, impacts in graphs.feature_impacts.items() %}
+          <article class="dashboard-card subject-card">
+            <h2>{{ subject|title }}</h2>
+            {% set effect = analysis.subject_effects.get(subject) %}
+            {% if effect %}
+              <p class="subject-mark">Predicted mark: <strong>{{ effect.predicted_mark }}</strong></p>
+              <h3>Affected By</h3>
+              <ul class="clean-list subject-effects">
+                {% for item in effect.affected_by %}
+                  <li>
+                    <strong>{{ item.label }}</strong>
+                    <span>{{ item.reason }}</span>
+                    <em>{{ item.fix }}</em>
+                  </li>
+                {% endfor %}
+              </ul>
+            {% endif %}
+            <h3>Top Negative Factors</h3>
+            <ul class="factor-list negative">
+              {% for item in impacts.negative %}
+                <li><span>{{ item.feature }}</span><strong>{{ item.impact }}</strong></li>
+              {% endfor %}
+            </ul>
+            <h3>Top Positive Factors</h3>
+            <ul class="factor-list positive">
+              {% for item in impacts.positive %}
+                <li><span>{{ item.feature }}</span><strong>{{ item.impact }}</strong></li>
+              {% endfor %}
+            </ul>
+          </article>
+        {% endfor %}
+      </section>
+
+      <section class="dashboard-card chart-card">
+        <h2>Current Input Impact Chart</h2>
+        <img src="{{ url_for('static', filename=graphs.feature_impact_bar) }}" alt="Feature impact chart">
+      </section>
+    </main>
+  </div>
+</body>
+</html>

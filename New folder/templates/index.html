@@ -1,0 +1,49 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Student Risk Dashboard</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+  <main class="shell">
+    <section class="topbar">
+      <div>
+        <p class="eyebrow">Decision Support System</p>
+        <h1>Student Risk Dashboard</h1>
+      </div>
+    </section>
+
+    <form class="panel form-grid" action="{{ url_for('predict') }}" method="post">
+      <label>
+        Daily Usage Hours
+        <input name="Daily_Usage_Hours" type="number" min="0" max="18" step="0.1" value="5.0" required>
+      </label>
+      <label>
+        Time on Social Media
+        <input name="Time_on_Social_Media" type="number" min="0" max="12" step="0.1" value="2.5" required>
+      </label>
+      <label>
+        Sleep Hours
+        <input name="Sleep_Hours" type="number" min="0" max="14" step="0.1" value="6.5" required>
+      </label>
+      <label>
+        Apps Used Daily
+        <input name="Apps_Used_Daily" type="number" min="0" max="80" step="1" value="12" required>
+      </label>
+      <label>
+        Time on Gaming
+        <input name="Time_on_Gaming" type="number" min="0" max="12" step="0.1" value="1.0" required>
+      </label>
+      <label>
+        Phone Checks Per Day
+        <input name="Phone_Checks_Per_Day" type="number" min="0" max="300" step="1" value="75" required>
+      </label>
+      <div class="form-actions">
+        <button type="submit">Generate Risk Analysis</button>
+      </div>
+    </form>
+  </main>
+</body>
+</html>

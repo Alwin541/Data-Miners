@@ -1,0 +1,81 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Parent Report</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body class="dashboard-page">
+  <div class="dashboard-shell">
+    <aside class="dashboard-sidebar">
+      <div class="brand-block">
+        <div class="brand-mark">SA</div>
+        <div>
+          <strong>Smart Student Analyzer</strong>
+          <span>Screen Time vs Academic Performance</span>
+        </div>
+      </div>
+      <nav class="dashboard-nav">
+        <a href="{{ url_for('index') }}">New Input</a>
+        <a href="{{ url_for('dashboard') }}">Dashboard</a>
+        <a class="active" href="{{ url_for('parent_report') }}">Parent Report</a>
+        <a href="{{ url_for('subject_analysis') }}">Subject Analysis</a>
+      </nav>
+      <div class="sidebar-note">
+        <strong>Clear Guidance<br>Calmer Decisions</strong>
+        <p>Use the report to focus on the few habits that matter most this week.</p>
+      </div>
+    </aside>
+
+    <main class="dashboard-main">
+      <header class="dashboard-header">
+        <div>
+          <p class="eyebrow">Parent View</p>
+          <h1>Simple Student Report</h1>
+        </div>
+        <div class="dashboard-user">
+          <span>Predicted Risk</span>
+          <strong style="color: {{ graphs.risk_color|default('#8ea2ff') }}">{{ prediction.addiction|default('Unknown') }} Risk</strong>
+        </div>
+      </header>
+
+      <section class="dashboard-card insight-card parent-summary-card">
+        <h2>Summary</h2>
+        <p>{{ analysis.parent_summary|default('No parent summary is available for this report yet.') }}</p>
+        {% if audio_path %}
+          <audio controls src="{{ url_for('static', filename=audio_path) }}"></audio>
+        {% else %}
+          <p class="status">Audio could not be generated on this machine. Install gTTS or configure ElevenLabs.</p>
+        {% endif %}
+        <details class="audio-script">
+          <summary>Audio script</summary>
+          <p>{{ audio_script|default('No audio script is available for this report yet.') }}</p>
+        </details>
+        <p class="status">{{ analysis.ai_source|default('Local report') }}</p>
+      </section>
+
+      <section class="dashboard-lower">
+        <article class="dashboard-card input-card">
+          <h2>Key Problems</h2>
+          <dl class="facts parent-facts">
+            <div><dt>Biggest risk factor</dt><dd>{{ analysis.biggest_risk_factor|default('Not available') }}</dd></div>
+            <div><dt>Most affected subject</dt><dd>{{ analysis.most_affected_subject|default('Not available') }}</dd></div>
+            <div><dt>Predicted risk</dt><dd>{{ prediction.addiction|default('Unknown') }}</dd></div>
+          </dl>
+        </article>
+        <article class="dashboard-card insight-card">
+          <h2>3 Suggestions</h2>
+          <ul class="clean-list recommendation-list">
+            {% for item in analysis.recommendations|default([]) %}
+              <li>{{ item }}</li>
+            {% else %}
+              <li>No recommendations are available for this report yet.</li>
+            {% endfor %}
+          </ul>
+        </article>
+      </section>
+    </main>
+  </div>
+</body>
+</html>
